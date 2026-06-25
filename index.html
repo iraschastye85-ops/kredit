@@ -1,0 +1,429 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{max-width:390px;margin:0 auto;font-family:var(--font-sans);background:var(--color-background-tertiary);min-height:600px;border-radius:20px;overflow:hidden;border:0.5px solid var(--color-border-tertiary)}
+.statusbar{background:#1D9E75;padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between}
+.statusbar-title{color:#fff;font-size:15px;font-weight:500;letter-spacing:-0.2px}
+.statusbar-sub{color:#9FE1CB;font-size:12px}
+.tabs{display:flex;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.tab{flex:1;padding:10px 4px 9px;font-size:12px;color:var(--color-text-secondary);text-align:center;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .15s}
+.tab.active{color:#1D9E75;border-bottom-color:#1D9E75;font-weight:500}
+.tab i{display:block;font-size:18px;margin-bottom:2px}
+.screen{display:none;padding:12px}
+.screen.active{display:block}
+.card{background:var(--color-background-primary);border-radius:12px;border:0.5px solid var(--color-border-tertiary);padding:14px;margin-bottom:10px}
+.card-title{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:10px;text-transform:none}
+.mcard{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.mcard-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}
+.mcard-value{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.mcard-sub{font-size:11px;color:var(--color-text-secondary);margin-top:1px}
+.progress-bar{height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;margin:6px 0 3px}
+.progress-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.slider-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.slider-row label{font-size:12px;color:var(--color-text-secondary);white-space:nowrap}
+.slider-row input{flex:1}
+.slider-val{font-size:13px;font-weight:500;color:var(--color-text-primary);min-width:76px;text-align:right}
+.chart-wrap{position:relative;width:100%;height:200px;margin-bottom:4px}
+.legend{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--color-text-secondary)}
+.legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.step{display:flex;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.step:last-child{border-bottom:none}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.step-body{flex:1}
+.step-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.step-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.tip{background:#E1F5EE;border-radius:8px;padding:10px 12px;border-left:3px solid #1D9E75;border-radius:0;margin-bottom:10px}
+.tip-text{font-size:12px;color:#085041;line-height:1.5}
+.loan-section{margin-bottom:12px}
+.loan-header{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--color-background-primary);border-radius:12px 12px 0 0;border:0.5px solid var(--color-border-tertiary);border-bottom:none;cursor:pointer}
+.loan-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.loan-name{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.loan-bal{font-size:13px;color:var(--color-text-secondary)}
+.loan-chevron{font-size:16px;color:var(--color-text-secondary);transition:transform .2s}
+.loan-chevron.open{transform:rotate(180deg)}
+.loan-body{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-top:none;border-radius:0 0 12px 12px;padding:0 12px 10px}
+.pay-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.pay-block{background:var(--color-background-secondary);border-radius:8px;padding:8px 10px}
+.pay-block-label{font-size:10px;color:var(--color-text-secondary);margin-bottom:4px}
+.pay-block-row{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.pay-block-row label{font-size:11px;color:var(--color-text-secondary);white-space:nowrap}
+.pay-block input[type=date],.pay-block input[type=number]{width:100%;font-size:12px;padding:4px 6px;border:0.5px solid var(--color-border-secondary);border-radius:6px;background:var(--color-background-primary);color:var(--color-text-primary)}
+.pay-block input[type=checkbox]{width:14px;height:14px;accent-color:#1D9E75;cursor:pointer}
+.paid-badge{display:inline-block;background:#E1F5EE;color:#085041;font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500}
+.motive-card{background:#1D9E75;border-radius:12px;padding:16px;margin-bottom:10px}
+.motive-text{color:#fff;font-size:15px;font-weight:500;line-height:1.5;text-align:center}
+.motive-sub{color:#9FE1CB;font-size:12px;text-align:center;margin-top:4px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.stat-card{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px}
+.stat-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:3px}
+.stat-val{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.stat-note{font-size:10px;color:var(--color-text-secondary);margin-top:1px}
+.tag{display:inline-block;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:500}
+.tag-a{background:#E1F5EE;color:#085041}
+.tag-b{background:#E6F1FB;color:#0C447C}
+.tag-c{background:#FAECE7;color:#712B13}
+.info-block{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.info-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.info-text{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:10px 0}
+</style>
+
+<h2 class="sr-only">Приложение: план погашения кредитов методом снежного кома</h2>
+
+<div class="app">
+  <div class="statusbar">
+    <div>
+      <div class="statusbar-title">Снежный ком</div>
+      <div class="statusbar-sub">план Ирины</div>
+    </div>
+    <div style="text-align:right">
+      <div style="color:#9FE1CB;font-size:11px" id="hdr-date"></div>
+      <div style="color:#fff;font-size:13px;font-weight:500" id="hdr-total"></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('home')"><i class="ti ti-home" aria-hidden="true"></i>Главная</button>
+    <button class="tab" onclick="showTab('checklist')"><i class="ti ti-checklist" aria-hidden="true"></i>Платежи</button>
+    <button class="tab" onclick="showTab('plan')"><i class="ti ti-chart-line" aria-hidden="true"></i>График</button>
+    <button class="tab" onclick="showTab('guide')"><i class="ti ti-book" aria-hidden="true"></i>Гид</button>
+  </div>
+
+  <div id="screen-home" class="screen active">
+    <div class="motive-card" id="motive-block">
+      <div class="motive-text" id="motive-text">Каждый рубль — шаг к свободе</div>
+      <div class="motive-sub" id="motive-sub">нажми, чтобы сменить фразу</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Общий долг</div>
+        <div class="stat-val" id="total-debt">1 414 381 ₽</div>
+        <div class="stat-note">на июнь 2026</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Мин. платежи</div>
+        <div class="stat-val">53 662 ₽</div>
+        <div class="stat-note">в месяц</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Бюджет</div>
+        <div class="stat-val" id="hdr-budget-val">90 000 ₽</div>
+        <div class="stat-note">на кредиты</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Дата свободы</div>
+        <div class="stat-val" id="freedom-date">—</div>
+        <div class="stat-note">при текущем бюджете</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Прогресс погашения</div>
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+          <span style="color:var(--color-text-secondary)"><span class="tag tag-a">А</span> 70 574 ₽</span>
+          <span style="color:#1D9E75;font-weight:500" id="prog-a-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="prog-a" style="background:#1D9E75;width:0%"></div></div>
+        <div style="font-size:10px;color:var(--color-text-secondary)" id="prog-a-lbl">закроется —</div>
+      </div>
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+          <span style="color:var(--color-text-secondary)"><span class="tag tag-b">Б</span> 373 267 ₽</span>
+          <span style="color:#378ADD;font-weight:500" id="prog-b-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="prog-b" style="background:#378ADD;width:0%"></div></div>
+        <div style="font-size:10px;color:var(--color-text-secondary)" id="prog-b-lbl">закроется —</div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+          <span style="color:var(--color-text-secondary)"><span class="tag tag-c">В</span> 970 540 ₽</span>
+          <span style="color:#D85A30;font-weight:500" id="prog-c-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="prog-c" style="background:#D85A30;width:0%"></div></div>
+        <div style="font-size:10px;color:var(--color-text-secondary)" id="prog-c-lbl">закроется —</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Бюджет на кредиты</div>
+      <div class="slider-row">
+        <label>В месяц:</label>
+        <input type="range" min="55000" max="120000" step="5000" value="90000" id="budget-slider" />
+        <span class="slider-val" id="budget-display">90 000 ₽</span>
+      </div>
+      <div style="font-size:12px;color:var(--color-text-secondary)" id="extra-note"></div>
+    </div>
+  </div>
+
+  <div id="screen-checklist" class="screen">
+    <div class="tip"><div class="tip-text">Вноси фактические данные после каждого платежа — так план остаётся точным.</div></div>
+    <div id="checklist-loans"></div>
+  </div>
+
+  <div id="screen-plan" class="screen">
+    <div class="card" style="padding:10px 14px 14px">
+      <div class="card-title">Снижение долга по месяцам</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div>Кредит А</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#378ADD"></div>Кредит Б</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#D85A30"></div>Кредит В</div>
+      </div>
+      <div class="chart-wrap"><canvas id="main-chart" role="img" aria-label="График снижения остатков трёх кредитов"></canvas></div>
+    </div>
+    <div class="card" id="plan-steps"></div>
+  </div>
+
+  <div id="screen-guide" class="screen">
+    <div class="info-block">
+      <div class="info-title">Что такое метод снежного кома?</div>
+      <div class="info-text">Ты платишь минимум по всем кредитам, а весь свободный бюджет бьёшь по самому маленькому долгу. Когда он закрыт — высвободившиеся деньги прибавляешь к следующему. Ком набирает силу с каждым закрытым кредитом.</div>
+    </div>
+    <div class="info-block">
+      <div class="info-title" style="color:#1D9E75">Шаг 1 — Кредит А (70 574 ₽)</div>
+      <div class="info-text">Платишь минимум по Б (19 000 ₽) и В (31 475 ₽), а весь остаток бюджета — на А. При 90 000 ₽/мес это около 40 000 ₽ сверх минимума. Кредит А с такой скоростью закроется примерно за 2 месяца.</div>
+    </div>
+    <div class="info-block">
+      <div class="info-title" style="color:#378ADD">Шаг 2 — Кредит Б (373 267 ₽)</div>
+      <div class="info-text">После закрытия А добавляешь его 3 187 ₽ минималки к Б, плюс весь доп. бюджет. Теперь Б получает ~43 000 ₽/мес вместо 19 000 ₽. Закроется примерно через 9–10 месяцев после старта.</div>
+    </div>
+    <div class="info-block">
+      <div class="info-title" style="color:#D85A30">Шаг 3 — Кредит В (970 540 ₽)</div>
+      <div class="info-text">Когда Б закрыт, весь бюджет 90 000 ₽ идёт на В. Это в три раза больше текущего минимума — основной долг начнёт быстро таять. Финальное закрытие через ~30 месяцев с начала плана.</div>
+    </div>
+    <div class="divider"></div>
+    <div class="info-block">
+      <div class="info-title">Важно по кредиту В</div>
+      <div class="info-text">Ближайший платёж 31 475 ₽ — это только проценты, тело долга не уменьшается. Уточни у банка аннуитетный платёж с погашением основного долга. Возможно, надо доплачивать сверху — иначе срок вырастет.</div>
+    </div>
+    <div class="info-block">
+      <div class="info-title">Как вносить досрочные платежи</div>
+      <div class="info-text">При досрочном погашении всегда выбирай уменьшение срока, а не суммы платежа — так ты быстрее гасишь тело и платишь меньше процентов.</div>
+    </div>
+    <div class="info-block">
+      <div class="info-title">Самозанятость и НПД</div>
+      <div class="info-text">Твой доход нестабильный — в мае 2026 было 95 600 ₽, в апреле 219 480 ₽. В «тощие» месяцы держи минимальный бюджет 55 000 ₽, а в хорошие — кидай на кредиты всё лишнее сверх плана.</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const LOANS=[
+  {name:'А',color:'#1D9E75',balance:70574,minPay:3187,rate:0.049},
+  {name:'Б',color:'#378ADD',balance:373267,minPay:19000,rate:0.047},
+  {name:'В',color:'#D85A30',balance:970540,minPay:31475,rate:0.039}
+];
+
+const MOTIVES=[
+  ['Каждый рубль — шаг к свободе','деньги работают на тебя, а не наоборот'],
+  ['Ты уже начала — это самое трудное','движение важнее скорости'],
+  ['Маленькие победы складываются в большую','закрой А — почувствуй силу'],
+  ['Долги временны, свобода — навсегда','держи цель перед глазами'],
+  ['Снежный ком уже катится','остановить его невозможно'],
+  ['Твой доход — твоё главное оружие','135 000 ₽/мес делают тебя сильнее долгов'],
+];
+let motIdx=0;
+document.getElementById('motive-block').addEventListener('click',()=>{
+  motIdx=(motIdx+1)%MOTIVES.length;
+  document.getElementById('motive-text').textContent=MOTIVES[motIdx][0];
+  document.getElementById('motive-sub').textContent=MOTIVES[motIdx][1];
+});
+
+function fmt(n){return Math.round(n).toLocaleString('ru-RU')+'₽'}
+function monthStr(offset){
+  const d=new Date(2026,5+offset,1);
+  return d.toLocaleDateString('ru-RU',{month:'short',year:'2-digit'});
+}
+function monthFull(offset){
+  const d=new Date(2026,5+offset,1);
+  return d.toLocaleDateString('ru-RU',{month:'long',year:'numeric'});
+}
+
+function simulate(budget){
+  let bal=LOANS.map(l=>l.balance);
+  const hist=[bal.map(b=>Math.round(b))];
+  const closed=[null,null,null];
+  const interest=[0,0,0];
+  let m=0;
+  while(m<60){
+    m++;
+    const mins=bal.map((b,i)=>b>0?LOANS[i].minPay:0);
+    const totalMin=mins.reduce((a,b)=>a+b,0);
+    if(totalMin===0)break;
+    let extra=Math.max(0,budget-totalMin);
+    const newBal=bal.map((b,i)=>{
+      if(b<=0)return 0;
+      const intr=b*LOANS[i].rate/12;
+      interest[i]+=intr;
+      let pay=mins[i];
+      if(i===0&&b>0)pay+=extra;
+      else if(i===1&&bal[0]<=0)pay+=extra;
+      else if(i===2&&bal[0]<=0&&bal[1]<=0)pay+=extra;
+      const actual=Math.min(b+intr,pay);
+      const nb=Math.max(0,b+intr-actual);
+      if(nb===0&&closed[i]===null)closed[i]=m;
+      return nb;
+    });
+    bal=newBal;
+    hist.push(bal.map(b=>Math.round(b)));
+    if(bal.every(b=>b<=0))break;
+  }
+  return{hist,closed,interest,months:m};
+}
+
+let budget=90000;
+let chart=null;
+
+function updateAll(){
+  const{hist,closed,interest,months}=simulate(budget);
+  const labels=hist.map((_,i)=>monthStr(i));
+  document.getElementById('budget-display').textContent=budget.toLocaleString('ru-RU')+' ₽';
+  document.getElementById('hdr-budget-val').textContent=budget.toLocaleString('ru-RU')+' ₽';
+
+  const totalMin=LOANS.reduce((a,l)=>a+l.minPay,0);
+  const extra=budget-totalMin;
+  document.getElementById('extra-note').textContent=
+    extra>0?`Доп. удар по кредиту А: ~${Math.round(extra).toLocaleString('ru-RU')} ₽/мес сверх минималки`
+    :'Бюджета едва хватает на минимальные платежи';
+
+  const totalDebt=LOANS.reduce((a,l)=>a+l.balance,0);
+  document.getElementById('total-debt').textContent=Math.round(totalDebt).toLocaleString('ru-RU')+' ₽';
+  document.getElementById('freedom-date').textContent=monthStr(months);
+
+  const pcts=[70574,373267,970540].map(b=>Math.round(b/totalDebt*100));
+  const closedPcts=[closed[0]?100:0,closed[1]?100:0,closed[2]?100:0];
+  ['a','b','c'].forEach((k,i)=>{
+    document.getElementById('prog-'+k).style.width=closedPcts[i]+'%';
+    document.getElementById('prog-'+k+'-pct').textContent=closedPcts[i]+'%';
+    document.getElementById('prog-'+k+'-lbl').textContent='закроется '+monthFull(closed[i]||months);
+  });
+
+  const hdrDate=new Date();
+  document.getElementById('hdr-date').textContent=hdrDate.toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
+
+  const ds=LOANS.map((l,i)=>({
+    label:'Кредит '+l.name,data:hist.map(h=>h[i]),
+    borderColor:l.color,backgroundColor:l.color+'22',
+    fill:true,tension:0.3,pointRadius:0,borderWidth:2
+  }));
+  if(chart){chart.data.labels=labels;chart.data.datasets=ds;chart.update();}
+  else{
+    chart=new Chart(document.getElementById('main-chart'),{
+      type:'line',data:{labels,datasets:ds},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toLocaleString('ru-RU')+' ₽'}}},
+        scales:{
+          x:{ticks:{autoSkip:true,maxTicksLimit:10,font:{size:10},color:'#888'},grid:{display:false}},
+          y:{ticks:{callback:v=>Math.round(v/1000)+'к',font:{size:10},color:'#888'},grid:{color:'rgba(128,128,128,0.08)'}}
+        }
+      }
+    });
+  }
+
+  const steps=document.getElementById('plan-steps');
+  const colors=['#1D9E75','#378ADD','#D85A30'];
+  const bgs=['#E1F5EE','#E6F1FB','#FAECE7'];
+  const extras=[
+    `Весь доп. бюджет сюда: ~${Math.round(extra>0?extra:0).toLocaleString('ru-RU')} ₽ сверх минималки`,
+    `После закрытия А добавляй его 3 187 ₽ к платежу Б`,
+    `После закрытия Б — весь ${Math.round(budget).toLocaleString('ru-RU')} ₽/мес идёт сюда`
+  ];
+  steps.innerHTML='<div class="card-title" style="margin-bottom:10px">Пошаговый план</div>'+
+    LOANS.map((l,i)=>`<div class="step">
+      <div class="step-num" style="background:${bgs[i]};color:${colors[i]}">${i+1}</div>
+      <div class="step-body">
+        <div class="step-title">Кредит ${l.name} — до ${monthFull(closed[i]||months)}</div>
+        <div class="step-desc">${extras[i]}<br>Переплата процентами: ~${Math.round(interest[i]).toLocaleString('ru-RU')} ₽</div>
+      </div>
+    </div>`).join('');
+}
+
+document.getElementById('budget-slider').addEventListener('input',e=>{
+  budget=+e.target.value;updateAll();
+});
+
+function buildChecklist(){
+  const container=document.getElementById('checklist-loans');
+  const colors=['#1D9E75','#378ADD','#D85A30'];
+  const bgs=['#E1F5EE','#E6F1FB','#FAECE7'];
+  const days=[19,28,19];
+  const amts=[3187,19000,31475];
+  const months=[];
+  for(let i=0;i<6;i++){
+    const d=new Date(2026,6+i,1);
+    months.push(d.toLocaleDateString('ru-RU',{month:'long',year:'numeric'}));
+  }
+  container.innerHTML='';
+  LOANS.forEach((l,li)=>{
+    const sec=document.createElement('div');
+    sec.className='loan-section';
+    const key='loan'+li;
+    const open=li===0;
+    sec.innerHTML=`<div class="loan-header" onclick="toggleLoan(${li})">
+      <div class="loan-dot" style="background:${colors[li]}"></div>
+      <div class="loan-name">Кредит ${l.name}</div>
+      <div class="loan-bal">${l.balance.toLocaleString('ru-RU')} ₽</div>
+      <i class="ti ti-chevron-down loan-chevron ${open?'open':''}" id="chev${li}" aria-hidden="true"></i>
+    </div>
+    <div class="loan-body" id="lbody${li}" style="display:${open?'block':'none'}">
+      <div style="padding:8px 0 4px;font-size:11px;color:var(--color-text-secondary)">мин. платёж ${amts[li].toLocaleString('ru-RU')} ₽ · дата ~${days[li]} числа</div>
+      ${months.map((m,mi)=>`
+        <div style="border-bottom:0.5px solid var(--color-border-tertiary);padding:8px 0" id="payrow-${li}-${mi}">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:12px;font-weight:500;color:var(--color-text-primary)">${m}</span>
+            <span id="paidbadge-${li}-${mi}"></span>
+          </div>
+          <div class="pay-row">
+            <div class="pay-block">
+              <div class="pay-block-label">Прогноз</div>
+              <div class="pay-block-row"><label>Дата</label></div>
+              <input type="date" id="plan-date-${li}-${mi}" value="2026-${String(7+mi).padStart(2,'0')}-${String(days[li]).padStart(2,'0')}" />
+              <div style="margin-top:4px"><label style="font-size:11px;color:var(--color-text-secondary)">Сумма</label></div>
+              <input type="number" id="plan-amt-${li}-${mi}" value="${amts[li]}" style="margin-top:2px" />
+            </div>
+            <div class="pay-block">
+              <div class="pay-block-label" style="display:flex;align-items:center;gap:4px">
+                Факт
+                <input type="checkbox" id="done-${li}-${mi}" onchange="markDone(${li},${mi})" />
+              </div>
+              <div class="pay-block-row"><label>Дата</label></div>
+              <input type="date" id="fact-date-${li}-${mi}" />
+              <div style="margin-top:4px"><label style="font-size:11px;color:var(--color-text-secondary)">Сумма</label></div>
+              <input type="number" id="fact-amt-${li}-${mi}" placeholder="0" style="margin-top:2px" />
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+    container.appendChild(sec);
+  });
+}
+
+function toggleLoan(i){
+  const body=document.getElementById('lbody'+i);
+  const chev=document.getElementById('chev'+i);
+  const open=body.style.display==='block';
+  body.style.display=open?'none':'block';
+  chev.classList.toggle('open',!open);
+}
+
+function markDone(li,mi){
+  const done=document.getElementById('done-'+li+'-'+mi).checked;
+  const badge=document.getElementById('paidbadge-'+li+'-'+mi);
+  badge.innerHTML=done?'<span class="paid-badge">оплачено</span>':'';
+}
+
+function showTab(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  const idx={home:0,checklist:1,plan:2,guide:3}[id];
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+}
+
+buildChecklist();
+updateAll();
+</script>
